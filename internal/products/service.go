@@ -1,16 +1,23 @@
-package products 
+package products
 
-type handler struct {
-	service Service
+import (
+	"context"
+	repo "github.com/Didul-arch/ecom-go-belajar/internal/adapters/mysql/sqlc"
+)
+
+type Service interface {
+	ListProducts(ctx context.Context) ([]repo.Product, error) 
 }
 
-func NewHandler(s Service) *handler {
-	return &handler{
-		service: s,
-	}
+type svc struct {
+	// repository
+	repo repo.Querier
 }
 
-func (h *handler) ListProducts(w http.ResponseWriter, r *http.Request) {
-	// 1. call the service -> ListProducts
-	// 2. Return JSON in an HTTP response
+func NewService(repo repo.Querier) Service {
+	return &svc {repo: repo}
+}
+
+func (s *svc) ListProducts(ctx context.Context) ([]repo.Product, error) {
+  return s.repo.ListProducts(ctx)
 }

@@ -4,9 +4,12 @@ import (
 	"net/http"
 	"time"
 	"log"
+
+	"database/sql"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/Didul-arch/ecom-go-belajar/internal/products"
+	repo "github.com/Didul-arch/ecom-go-belajar/internal/adapters/mysql/sqlc"
 )
 
 // mount
@@ -27,8 +30,9 @@ func (app *application) mount() http.Handler {
 	})
 	// http.ListenAndServe(":3000", r)
 
-	productHandler := products.NewHandler()
-	r.Get("/products", )
+	productService := products.NewService(repo.New(app.db))
+	productHandler := products.NewHandler(productService)
+	r.Get("/products", productHandler.ListProducts)
 	
 	return r
 }
@@ -50,6 +54,7 @@ type application struct {
 	config config
 	// logger
 	// db driver
+	db *sql.DB
 }
 
 type config struct {
