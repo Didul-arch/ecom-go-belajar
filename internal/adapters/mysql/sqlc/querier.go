@@ -6,10 +6,13 @@ package repo
 
 import (
 	"context"
+	"database/sql"
 )
 
 type Querier interface {
-	FindProductByID(ctx context.Context) (Product, error)
+	CreateOrder(ctx context.Context, customerID int64) (sql.Result, error)
+	CreateOrderItem(ctx context.Context, arg CreateOrderItemParams) (sql.Result, error)
+	FindProductByID(ctx context.Context, id int64) (Product, error)
 	ListProducts(ctx context.Context) ([]Product, error)
 }
 

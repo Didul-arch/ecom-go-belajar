@@ -7,15 +7,51 @@ package repo
 
 import (
 	"context"
+	"database/sql"
 )
+
+const createOrder = `-- name: CreateOrder :execresult
+INSERT INTO orders (
+  customer_id
+) VALUES (?)
+`
+
+func (q *Queries) CreateOrder(ctx context.Context, customerID int64) (sql.Result, error) {
+	return q.db.ExecContext(ctx, createOrder, customerID)
+}
+
+const createOrderItem = `-- name: CreateOrderItem :execresult
+INSERT INTO order_items (
+  order_id,
+  product_id,
+  quantity,
+  price_cents
+) VALUES (?, ?, ?, ?)
+`
+
+type CreateOrderItemParams struct {
+	OrderID    int64 `json:"order_id"`
+	ProductID  int64 `json:"product_id"`
+	Quantity   int32 `json:"quantity"`
+	PriceCents int32 `json:"price_cents"`
+}
+
+func (q *Queries) CreateOrderItem(ctx context.Context, arg CreateOrderItemParams) (sql.Result, error) {
+	return q.db.ExecContext(ctx, createOrderItem,
+		arg.OrderID,
+		arg.ProductID,
+		arg.Quantity,
+		arg.PriceCents,
+	)
+}
 
 const findProductByID = `-- name: FindProductByID :one
 SELECT id, name, price_in_centers, quantity, created_at FROM products
-WHERE id = $1
+WHERE id = ?
 `
 
-func (q *Queries) FindProductByID(ctx context.Context) (Product, error) {
-	row := q.db.QueryRowContext(ctx, findProductByID)
+func (q *Queries) FindProductByID(ctx context.Context, id int64) (Product, error) {
+	row := q.db.QueryRowContext(ctx, findProductByID, id)
 	var i Product
 	err := row.Scan(
 		&i.ID,

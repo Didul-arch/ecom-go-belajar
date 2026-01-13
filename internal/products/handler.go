@@ -1,8 +1,10 @@
-package products 
+// Package products provides HTTP handlers for managing product data.
+package products
 
 import (
 	"log"
 	"net/http"
+
 	"github.com/Didul-arch/ecom-go-belajar/internal/json"
 )
 
