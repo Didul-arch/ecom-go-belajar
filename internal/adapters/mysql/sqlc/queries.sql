@@ -18,3 +18,8 @@ INSERT INTO order_items (
   quantity,
   price_cents
 ) VALUES (?, ?, ?, ?);
+
+-- name: ReduceProductStock :execresult
+UPDATE products
+SET quantity = quantity - ?
+WHERE id = ? AND quantity >= ?;

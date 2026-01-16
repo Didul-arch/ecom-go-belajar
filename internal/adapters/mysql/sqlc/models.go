@@ -22,6 +22,7 @@ type OrderItem struct {
 	Quantity   int32 `json:"quantity"`
 	PriceCents int32 `json:"price_cents"`
 }
+
 type Product struct {
 	ID             int64     `json:"id"`
 	Name           string    `json:"name"`

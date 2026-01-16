@@ -75,6 +75,14 @@ func (s *svc) PlaceOrder(ctx context.Context, tempOrder createOrderParams) (repo
 		}
 
 		// Challenge: Update the product stock quantity
+		_, err = qtx.ReduceProductStock(ctx, repo.ReduceProductStockParams{
+			Quantity: item.Quantity,
+			ID: item.ProductID,
+			Quantity_2: item.Quantity,
+		})
+		if err != nil {
+			return repo.Order{}, err
+		}
 	}
 	tx.Commit()
 
