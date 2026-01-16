@@ -96,3 +96,19 @@ func (q *Queries) ListProducts(ctx context.Context) ([]Product, error) {
 	}
 	return items, nil
 }
+
+const reduceProductStock = `-- name: ReduceProductStock :execresult
+UPDATE products
+SET quantity = quantity - ?
+WHERE id = ? AND quantity >= ?
+`
+
+type ReduceProductStockParams struct {
+	Quantity   int32 `json:"quantity"`
+	ID         int64 `json:"id"`
+	Quantity_2 int32 `json:"quantity_2"`
+}
+
+func (q *Queries) ReduceProductStock(ctx context.Context, arg ReduceProductStockParams) (sql.Result, error) {
+	return q.db.ExecContext(ctx, reduceProductStock, arg.Quantity, arg.ID, arg.Quantity_2)
+}
