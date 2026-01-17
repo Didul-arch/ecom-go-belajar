@@ -30,11 +30,11 @@ var (
 func (s *svc) PlaceOrder(ctx context.Context, tempOrder createOrderParams) (repo.Order, error) {
 	// validate payload
 	if tempOrder.CustomerID == 0 {
-		return repo.Order{}, fmt.Errorf("Customer ID is required")
+		return repo.Order{}, fmt.Errorf("customer ID is required")
 	}
 
 	if len(tempOrder.Items) == 0 {
-		return repo.Order{}, fmt.Errorf("Atleast one item is required")
+		return repo.Order{}, fmt.Errorf("atleast one item is required")
 	}
 
 	tx, err := s.db.Begin()
@@ -76,8 +76,8 @@ func (s *svc) PlaceOrder(ctx context.Context, tempOrder createOrderParams) (repo
 
 		// Challenge: Update the product stock quantity
 		_, err = qtx.ReduceProductStock(ctx, repo.ReduceProductStockParams{
-			Quantity: item.Quantity,
-			ID: item.ProductID,
+			Quantity:   item.Quantity,
+			ID:         item.ProductID,
 			Quantity_2: item.Quantity,
 		})
 		if err != nil {
@@ -94,4 +94,9 @@ func (s *svc) PlaceOrder(ctx context.Context, tempOrder createOrderParams) (repo
 			Valid: true,       // Kasih tahu Go kalau ini valid (gak null)
 		},
 	}, nil
+
+}
+
+func (s *svc) ListOrders(ctx context.Context) ([]repo.Order, error) {
+	return s.repo.ListOrders(ctx)
 }

@@ -18,4 +18,5 @@ type createOrderParams struct {
 
 type Service interface {
 	PlaceOrder(ctx context.Context, tempOrder createOrderParams) (repo.Order, error)
+	ListOrders(ctx context.Context) ([]repo.Order, error)
 }

@@ -40,6 +40,7 @@ func (app *application) mount() http.Handler {
 
 	r.Get("/products", productHandler.ListProducts)
 	r.Post("/orders", ordersHandler.PlaceOrder)
+	r.Get("/orders", ordersHandler.ListOrders)
 
 	return r
 }

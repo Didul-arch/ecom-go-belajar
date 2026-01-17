@@ -23,3 +23,7 @@ INSERT INTO order_items (
 UPDATE products
 SET quantity = quantity - ?
 WHERE id = ? AND quantity >= ?;
+
+-- name: ListOrders :many
+SELECT * FROM orders
+ORDER BY created_at;
